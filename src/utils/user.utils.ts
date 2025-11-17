@@ -8,9 +8,9 @@
  * Get user type label for display
  * 
  * Converts user type to a human-readable label.
- * Handles both frontend constants ('shop_keeper') and backend values ('shop_owner').
+ * Handles both frontend constants ('medicine_supplier') and backend values ('shop_owner').
  * 
- * @param userType - User type (patient, doctor, shop_owner, shop_keeper, admin)
+ * @param userType - User type (patient, doctor, shop_owner, medicine_supplier, admin)
  * @returns Human-readable label (Patient, Doctor, Shop Owner, Admin, User)
  */
 export const getUserTypeLabel = (userType: string | undefined): string => {
@@ -24,7 +24,7 @@ export const getUserTypeLabel = (userType: string | undefined): string => {
     case "doctor":
       return "Doctor";
     case "shop_owner": // Backend returns "shop_owner"
-    case "shop_keeper": // Frontend constant
+    case "medicine_supplier": // Frontend constant
       return "Shop Owner";
     case "admin":
       return "Admin";

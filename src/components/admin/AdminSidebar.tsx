@@ -10,7 +10,6 @@ import {
   ChatIcon,
   DocsIcon,
   MailIcon,
-  HorizontaLDots,
 } from "@/icons/index";
 import { PROTECTED_ROUTES } from "@/config/routes";
 
@@ -55,18 +54,10 @@ const AdminSidebar: React.FC = () => {
     >
       <div className="flex flex-col flex-1 overflow-y-auto no-scrollbar pt-6">
         <nav className="flex flex-col gap-6">
-          {navSections.map((section: any) => (
-            <div key={section.title} className="flex flex-col gap-4">
-              <h2
-                className={`
-                  text-xs uppercase text-gray-400 font-semibold tracking-wide
-                  ${!isExpanded && !isHovered ? "text-center" : "text-left"}
-                `}
-              >
-                {isExpanded || isHovered || isMobileOpen ? section.title : <HorizontaLDots />}
-              </h2>
+          {navSections.map((section) => (
+            <div key="main-section" className="flex flex-col gap-4">
               <ul className="flex flex-col gap-2">
-                {section.items.map((item: any) => (
+                {section.items.map((item) => (
                   <li key={item.name}>
                     <Link
                       href={item.path}

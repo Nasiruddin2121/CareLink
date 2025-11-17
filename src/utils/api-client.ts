@@ -158,13 +158,13 @@ export const apiRequest = async <T = unknown>(
     // Check if response is ok
     if (!response.ok) {
       // Parse error response - handle both JSON and text/HTML responses
-      let errorData: any = {};
+      let errorData: Record<string, unknown> = {};
       const contentType = response.headers.get('content-type');
       
       if (contentType && contentType.includes('application/json')) {
         try {
-          errorData = await response.json();
-        } catch (jsonError) {
+          errorData = await response.json() as Record<string, unknown>;
+        } catch {
           // If JSON parsing fails, try to get text
           const text = await response.text().catch(() => '');
           errorData = { message: text || 'An error occurred' };

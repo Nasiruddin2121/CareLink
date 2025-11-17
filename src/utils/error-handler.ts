@@ -7,9 +7,6 @@
 
 import { HTTP_STATUS, ERROR_MESSAGES } from '@/config/constants';
 import type {
-  ErrorResponse,
-  StandardizedErrorResponse,
-  ValidationErrorResponse,
   ErrorMessageObject,
 } from '@/types/api.types';
 
@@ -20,14 +17,14 @@ export class ApiError extends Error {
   statusCode: number;
   error?: string;
   errors?: Record<string, string[]>;
-  data?: any; // For 409 Conflict with existing resource
+  data?: unknown; // For 409 Conflict with existing resource
 
   constructor(
     message: string,
     statusCode: number = HTTP_STATUS.INTERNAL_SERVER_ERROR,
     error?: string,
     errors?: Record<string, string[]>,
-    data?: any
+    data?: unknown
   ) {
     super(message);
     this.name = 'ApiError';
@@ -45,20 +42,33 @@ export class ApiError extends Error {
  * @param error Error response from API
  * @returns Parsed error object
  */
-export const parseApiError = (error: any): ApiError => {
+export const parseApiError = (error: unknown): ApiError => {
   // Check if it's already an ApiError
   if (error instanceof ApiError) {
     return error;
   }
   
+  // Type guard for error objects
+  const isErrorObject = (err: unknown): err is Record<string, unknown> => {
+    return typeof err === 'object' && err !== null;
+  };
+  
+  if (!isErrorObject(error)) {
+    return new ApiError(
+      ERROR_MESSAGES.SERVER_ERROR,
+      HTTP_STATUS.INTERNAL_SERVER_ERROR,
+      'Error'
+    );
+  }
+  
   // Check if it's a standardized format (has statusCode and error fields at root)
-  if (error.statusCode && error.error) {
+  if (typeof error.statusCode === 'number' && typeof error.error === 'string') {
     // Standardized format
     return new ApiError(
-      error.message || ERROR_MESSAGES.SERVER_ERROR,
+      (typeof error.message === 'string' ? error.message : ERROR_MESSAGES.SERVER_ERROR),
       error.statusCode,
       error.error,
-      error.errors || undefined,
+      (error.errors && typeof error.errors === 'object' ? error.errors as Record<string, string[]> : undefined),
       error.data
     );
   }
@@ -103,8 +113,8 @@ export const parseApiError = (error: any): ApiError => {
     // Current format: string message
     return new ApiError(
       error.message,
-      error.statusCode || HTTP_STATUS.INTERNAL_SERVER_ERROR,
-      error.error || 'Error',
+      (typeof error.statusCode === 'number' ? error.statusCode : HTTP_STATUS.INTERNAL_SERVER_ERROR),
+      (typeof error.error === 'string' ? error.error : 'Error'),
       undefined,
       error.data
     );
@@ -130,8 +140,8 @@ export const parseApiError = (error: any): ApiError => {
     if (typeof error.message === 'string') {
       return new ApiError(
         error.message,
-        error.statusCode || HTTP_STATUS.INTERNAL_SERVER_ERROR,
-        error.error || 'Error',
+        (typeof error.statusCode === 'number' ? error.statusCode : HTTP_STATUS.INTERNAL_SERVER_ERROR),
+        (typeof error.error === 'string' ? error.error : 'Error'),
         undefined,
         error.data
       );
@@ -140,9 +150,9 @@ export const parseApiError = (error: any): ApiError => {
   
   // Final fallback: unknown error format
   return new ApiError(
-    error.message || ERROR_MESSAGES.SERVER_ERROR,
-    error.statusCode || HTTP_STATUS.INTERNAL_SERVER_ERROR,
-    error.error || 'Error',
+    (typeof error.message === 'string' ? error.message : ERROR_MESSAGES.SERVER_ERROR),
+    (typeof error.statusCode === 'number' ? error.statusCode : HTTP_STATUS.INTERNAL_SERVER_ERROR),
+    (typeof error.error === 'string' ? error.error : 'Error'),
     undefined,
     error.data
   );
@@ -200,7 +210,7 @@ export const parseValidationErrors = (
  * @param error Error object
  * @returns Error message string
  */
-export const getErrorMessage = (error: any): string => {
+export const getErrorMessage = (error: unknown): string => {
   if (error instanceof ApiError) {
     return error.message;
   }
@@ -223,7 +233,7 @@ export const getErrorMessage = (error: any): string => {
  * @returns Field-level errors object
  */
 export const getFieldErrors = (
-  error: any
+  error: unknown
 ): Record<string, string[]> | undefined => {
   if (error instanceof ApiError) {
     return error.errors;
@@ -243,13 +253,14 @@ export const getFieldErrors = (
  * @param statusCode HTTP status code
  * @returns True if error has specified status code
  */
-export const isErrorStatus = (error: any, statusCode: number): boolean => {
+export const isErrorStatus = (error: unknown, statusCode: number): boolean => {
   if (error instanceof ApiError) {
     return error.statusCode === statusCode;
   }
   
-  if (error.statusCode) {
-    return error.statusCode === statusCode;
+  if (typeof error === 'object' && error !== null && 'statusCode' in error) {
+    const errorObj = error as { statusCode?: unknown };
+    return typeof errorObj.statusCode === 'number' && errorObj.statusCode === statusCode;
   }
   
   return false;
@@ -261,7 +272,7 @@ export const isErrorStatus = (error: any, statusCode: number): boolean => {
  * @param error Error object
  * @returns True if error is a validation error
  */
-export const isValidationError = (error: any): boolean => {
+export const isValidationError = (error: unknown): boolean => {
   return isErrorStatus(error, HTTP_STATUS.BAD_REQUEST);
 };
 
@@ -271,7 +282,7 @@ export const isValidationError = (error: any): boolean => {
  * @param error Error object
  * @returns True if error is an unauthorized error
  */
-export const isUnauthorizedError = (error: any): boolean => {
+export const isUnauthorizedError = (error: unknown): boolean => {
   return isErrorStatus(error, HTTP_STATUS.UNAUTHORIZED);
 };
 
@@ -281,7 +292,7 @@ export const isUnauthorizedError = (error: any): boolean => {
  * @param error Error object
  * @returns True if error is a forbidden error
  */
-export const isForbiddenError = (error: any): boolean => {
+export const isForbiddenError = (error: unknown): boolean => {
   return isErrorStatus(error, HTTP_STATUS.FORBIDDEN);
 };
 
@@ -291,7 +302,7 @@ export const isForbiddenError = (error: any): boolean => {
  * @param error Error object
  * @returns True if error is a not found error
  */
-export const isNotFoundError = (error: any): boolean => {
+export const isNotFoundError = (error: unknown): boolean => {
   return isErrorStatus(error, HTTP_STATUS.NOT_FOUND);
 };
 
@@ -301,7 +312,7 @@ export const isNotFoundError = (error: any): boolean => {
  * @param error Error object
  * @returns True if error is a conflict error
  */
-export const isConflictError = (error: any): boolean => {
+export const isConflictError = (error: unknown): boolean => {
   return isErrorStatus(error, HTTP_STATUS.CONFLICT);
 };
 
@@ -312,10 +323,15 @@ export const isConflictError = (error: any): boolean => {
  * @param error Error response from API
  * @returns ApiError instance
  */
-export const handleApiError = (error: any): ApiError => {
+export const handleApiError = (error: unknown): ApiError => {
+  // Type guard for error with response
+  const hasResponse = (err: unknown): err is { response?: { data?: unknown; status?: number; statusText?: string } } => {
+    return typeof err === 'object' && err !== null;
+  };
+  
   // Check if it's a network error (no response object)
   // This happens when fetch fails (network issue, CORS, etc.)
-  if (!error.response) {
+  if (!hasResponse(error) || !error.response) {
     // Check if it's already an ApiError
     if (error instanceof ApiError) {
       return error;
@@ -331,7 +347,7 @@ export const handleApiError = (error: any): ApiError => {
     }
     
     // Check if error has a message (might be a thrown Error)
-    if (error.message) {
+    if (error instanceof Error && error.message) {
       return new ApiError(
         error.message,
         HTTP_STATUS.INTERNAL_SERVER_ERROR,

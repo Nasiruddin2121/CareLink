@@ -282,8 +282,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
         });
         
         // Handle based on user type and approval status
-        // Handle both 'shop_keeper' (frontend constant) and 'shop_owner' (backend value)
-        const isShopOwner = userType === 'shop_keeper' || (userType as string) === 'shop_owner';
+        // Handle both 'medicine_supplier' (frontend constant) and 'shop_owner' (backend value)
+        const isShopOwner = userType === 'medicine_supplier' || (userType as string) === 'shop_owner';
         if (isPending && (userType === 'doctor' || isShopOwner)) {
           // Doctor/Shop Owner - Pending approval
           // Redirect to verification success page with pending status

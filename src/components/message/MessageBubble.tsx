@@ -15,17 +15,15 @@ import type { MessageListItem } from '@/types/message.types';
 type MessageBubbleProps = {
   message: MessageListItem;
   isOwn: boolean; // True if message is from current user
-  currentUserId: string;
   onViewPrescription?: (prescriptionId: string) => void;
 };
 
 export default function MessageBubble({
   message,
   isOwn,
-  currentUserId,
   onViewPrescription,
 }: MessageBubbleProps) {
-  const { id, message: text, message_type, sender, created_at, status } = message;
+  const { message: text, message_type, sender, created_at, status } = message;
   const timeAgo = formatDistanceToNow(new Date(created_at), { addSuffix: true });
 
   // Check if it's a prescription message

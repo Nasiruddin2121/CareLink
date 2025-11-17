@@ -183,7 +183,6 @@ export default function SignUpForm() {
                       }
                     }}
                     disabled={isLoading}
-                    error={!!validationErrors.name}
                   />
                   {validationErrors.name && (
                     <p className="mt-1 text-xs text-error-500">
@@ -217,7 +216,6 @@ export default function SignUpForm() {
                         }
                       }}
                       disabled={isLoading}
-                      error={!!validationErrors.first_name}
                     />
                     {validationErrors.first_name && (
                       <p className="mt-1 text-xs text-error-500">
@@ -246,7 +244,6 @@ export default function SignUpForm() {
                         }
                       }}
                       disabled={isLoading}
-                      error={!!validationErrors.last_name}
                     />
                     {validationErrors.last_name && (
                       <p className="mt-1 text-xs text-error-500">
@@ -276,7 +273,6 @@ export default function SignUpForm() {
                       }
                     }}
                     disabled={isLoading}
-                    error={!!validationErrors.email}
                   />
                   {validationErrors.email && (
                     <p className="mt-1 text-xs text-error-500">
@@ -304,7 +300,6 @@ export default function SignUpForm() {
                         }
                       }}
                       disabled={isLoading}
-                      error={!!validationErrors.password}
                     />
                     <span
                       onClick={() => setShowPassword(!showPassword)}

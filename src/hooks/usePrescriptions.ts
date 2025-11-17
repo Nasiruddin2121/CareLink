@@ -10,7 +10,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { getShopOwnerPrescriptions } from '@/services/api/shop-owner.service';
 import { useSocket } from '@/hooks/useSocket';
-import { WS_EVENTS } from '@/config/constants';
 import type { PrescriptionListItem, PrescriptionPaginationParams } from '@/types/prescription.types';
 import type { NewPrescriptionEvent } from '@/types/socket.types';
 import type { UserType } from '@/config/constants';
@@ -133,7 +132,7 @@ export const usePrescriptions = (
   /**
    * Setup WebSocket listeners for prescriptions
    */
-  const { socket, isConnected } = useSocket(userType, userId, {
+  useSocket(userType, userId, {
     onNewPrescription: handleNewPrescription,
   });
 

@@ -30,7 +30,6 @@ export default function BroadcastCard({
     status,
     patient,
     created_at,
-    assisted_by,
     conversation_id,
   } = broadcast;
 

@@ -13,7 +13,7 @@ import PrescriptionModal from '@/components/prescriptions/PrescriptionModal';
 import PrescriptionForm from '@/components/prescriptions/PrescriptionForm';
 import { usePrescription } from '@/hooks/usePrescription';
 import type { PrescriptionFormData } from '@/types/prescription.types';
-import type { ConversationType, UserType } from '@/config/constants';
+import type { UserType } from '@/config/constants';
 
 type MessageInputProps = {
   onSend: (message: string) => Promise<void>;
@@ -22,7 +22,6 @@ type MessageInputProps = {
   disabled?: boolean;
   placeholder?: string;
   // Prescription props (for doctors in patient_doctor conversations)
-  conversationType?: ConversationType;
   currentUserType?: UserType;
   patientName?: string;
   receiverId?: string;
@@ -35,7 +34,6 @@ export default function MessageInput({
   isLoading = false,
   disabled = false,
   placeholder = 'Type a message',
-  conversationType,
   currentUserType,
   patientName,
   receiverId,
@@ -45,7 +43,7 @@ export default function MessageInput({
   const [isSending, setIsSending] = useState(false);
   const [isPrescriptionModalOpen, setIsPrescriptionModalOpen] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const { prescription, isModalOpen: isViewModalOpen, openModal, closeModal } = usePrescription(currentUserType);
+  const { prescription, isModalOpen: isViewModalOpen, closeModal } = usePrescription(currentUserType);
 
   // Check if prescription button should be shown
   // Show for all doctors when they have an active conversation

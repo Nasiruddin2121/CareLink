@@ -4,7 +4,6 @@ import Image from 'next/image';
 import { formatDistanceToNow } from 'date-fns';
 import { Modal } from '@/components/ui/modal';
 import Button from '@/components/ui/button/Button';
-import Badge from '@/components/ui/badge/Badge';
 import type { Prescription } from '@/types/prescription.types';
 
 type PrescriptionModalProps = {

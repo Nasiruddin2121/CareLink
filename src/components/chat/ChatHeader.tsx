@@ -2,7 +2,6 @@
 
 import { useMemo } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import { PROTECTED_ROUTES, PUBLIC_ROUTES } from "@/config/routes";
@@ -18,7 +17,7 @@ const NAV_LINKS: NavLink[] = [
   { label: "Home", href: PUBLIC_ROUTES.HOME },
   { label: "Conversations", href: PROTECTED_ROUTES.CONVERSATIONS },
   { label: "Broadcasts", href: PROTECTED_ROUTES.BROADCASTS_INBOX, roles: ["doctor"] },
-  { label: "Prescriptions", href: PROTECTED_ROUTES.PRESCRIPTIONS_INBOX, roles: ["shop_keeper", "shop_owner"] },
+  { label: "Prescriptions", href: PROTECTED_ROUTES.PRESCRIPTIONS_INBOX, roles: ["medicine_supplier", "shop_owner"] },
 ];
 
 const ChatHeader = () => {
@@ -29,7 +28,7 @@ const ChatHeader = () => {
     return NAV_LINKS.filter((link) => {
       if (!link.roles) return true;
       if (!user?.type) return false;
-      const userType = user.type === "shop_keeper" || (user.type as string) === "shop_owner" ? "shop_owner" : user.type;
+      const userType = user.type === "medicine_supplier" || (user.type as string) === "shop_owner" ? "shop_owner" : user.type;
       return link.roles.includes(userType) || link.roles.includes(user.type);
     });
   }, [user?.type]);

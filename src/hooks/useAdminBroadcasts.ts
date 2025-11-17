@@ -74,6 +74,7 @@ export const useAdminBroadcasts = (
    */
   useEffect(() => {
     fetchBroadcasts(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   /**

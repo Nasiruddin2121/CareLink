@@ -1,20 +1,41 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 
 import { useAuth } from "@/hooks/useAuth";
+import { useBroadcasts } from "@/hooks/useBroadcasts";
+import BroadcastForm from "@/components/broadcast/BroadcastForm";
 
-import { PUBLIC_ROUTES, PROTECTED_ROUTES, RouteHelpers } from "@/config/routes";
+import { PROTECTED_ROUTES, RouteHelpers } from "@/config/routes";
 import { USER_TYPES } from "@/config/constants";
+import type { CreateBroadcastRequest } from "@/types/broadcast.types";
 
 export default function HeroSection() {
   const { user, isAuthenticated } = useAuth();
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   const inboxRoute = useMemo(() => {
     if (!user) return PROTECTED_ROUTES.CONVERSATIONS;
     return RouteHelpers.getRedirectRoute(user.type);
   }, [user]);
+
+  // Use broadcasts hook for creating broadcasts (patients only)
+  const { create, isLoading, error } = useBroadcasts(
+    user?.type,
+    user?.id,
+    'patient'
+  );
+
+  // Handle broadcast creation
+  const handleCreateBroadcast = async (data: CreateBroadcastRequest) => {
+    await create(data);
+    setSuccessMessage('Your broadcast has been sent to all verified doctors! They will respond soon.');
+    // Clear success message after 5 seconds
+    setTimeout(() => {
+      setSuccessMessage(null);
+    }, 5000);
+  };
 
   return (
     <section className="relative overflow-hidden from-white via-blue-50/30 to-purple-50/40 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
@@ -40,14 +61,44 @@ export default function HeroSection() {
             communication hub built for speed and clarity.
           </p>
 
-          {/* Inbox Button */}
-          {isAuthenticated && user?.type !== USER_TYPES.ADMIN && (
-            <Link
-              href={inboxRoute}
-              className="inline-flex w-max items-center justify-center px-7 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-md transition"
-            >
-              Open My Inbox
-            </Link>
+          {/* Broadcast Form for Patients */}
+          {isAuthenticated && user?.type === USER_TYPES.PATIENT ? (
+            <div className="w-full max-w-2xl space-y-4">
+              {/* Success Message */}
+              {successMessage && (
+                <div className="rounded-lg border border-green-200 bg-green-50 p-4 text-sm text-green-700 dark:bg-green-900/20 dark:border-green-800 dark:text-green-400">
+                  {successMessage}
+                </div>
+              )}
+
+              {/* Broadcast Form */}
+              <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-md dark:border-gray-800 dark:bg-gray-900">
+                <h2 className="mb-4 text-xl font-semibold text-gray-900 dark:text-white">
+                  Send a Broadcast to Doctors
+                </h2>
+                <p className="mb-4 text-sm text-gray-600 dark:text-gray-400">
+                  Describe your medical concerns and verified doctors will respond to help you.
+                </p>
+                <BroadcastForm
+                  onSubmit={handleCreateBroadcast}
+                  isLoading={isLoading}
+                  error={error}
+                  onSuccess={() => {
+                    // Success is handled by handleCreateBroadcast
+                  }}
+                />
+              </div>
+            </div>
+          ) : (
+            /* Inbox Button for other authenticated users */
+            isAuthenticated && user?.type !== USER_TYPES.ADMIN && (
+              <Link
+                href={inboxRoute}
+                className="inline-flex w-max items-center justify-center px-7 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-md transition"
+              >
+                Open My Inbox
+              </Link>
+            )
           )}
         </div>
       </div>

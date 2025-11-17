@@ -215,7 +215,7 @@ export function middleware(request: NextRequest) {
     if (isShopOwnerRoute) {
       // Only redirect if we can definitively determine user is NOT a shop owner
       // If userType is null/undefined, allow the request and let component handle it
-      const isShopOwner = userType === 'shop_keeper' || userType === 'shop_owner';
+      const isShopOwner = userType === 'medicine_supplier' || userType === 'shop_owner';
       if (userType && !isShopOwner) {
         // Not shop owner - redirect to conversations
         return NextResponse.redirect(new URL(PROTECTED_ROUTES.CONVERSATIONS, request.url));

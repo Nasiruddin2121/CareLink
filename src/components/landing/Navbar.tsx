@@ -19,7 +19,7 @@ export default function LandingNavbar() {
   const [showSignIn, setShowSignIn] = useState(false);
   const loadingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const isShopOwner = user?.type === "shop_keeper" || (user?.type as string) === "shop_owner";
+  const isShopOwner = user?.type === "medicine_supplier" || (user?.type as string) === "shop_owner";
   const isAdmin = user?.type === USER_TYPES.ADMIN;
   const userTypeLabel = user ? getUserTypeLabel(user.type) : "";
 

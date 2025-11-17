@@ -71,7 +71,7 @@ export const isValidPassword = (
  * @param value Value to validate
  * @returns True if valid, false otherwise
  */
-export const isRequired = (value: any): boolean => {
+export const isRequired = (value: unknown): boolean => {
   if (value === null || value === undefined) {
     return false;
   }

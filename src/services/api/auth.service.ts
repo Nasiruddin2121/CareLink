@@ -27,7 +27,7 @@ import type { ApiResponse } from '@/types/api.types';
  * User must verify email before logging in.
  * 
  * Maps frontend user types to backend API types:
- * - shop_keeper -> shop_owner (backend expects shop_owner)
+ * - medicine_supplier -> shop_owner (backend expects shop_owner)
  * 
  * @param data Registration data
  * @returns Registration response (OTP sent message)
@@ -38,10 +38,10 @@ export const register = async (
 ): Promise<RegisterResponse> => {
   try {
     // Map frontend user type to backend API type
-    // Frontend uses 'shop_keeper', backend expects 'shop_owner'
+    // Frontend uses 'medicine_supplier', backend expects 'shop_owner'
     const apiData = {
       ...data,
-      type: data.type === 'shop_keeper' ? 'shop_owner' : data.type,
+      type: data.type === 'medicine_supplier' ? 'shop_owner' : data.type,
     };
     
     const response = await apiPost<RegisterResponse>(

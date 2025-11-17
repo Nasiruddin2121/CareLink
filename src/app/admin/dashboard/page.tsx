@@ -5,7 +5,7 @@ import { useAdminStatistics } from "@/hooks/useAdminStatistics";
 import StatisticsCards from "@/components/admin/StatisticsCards";
 
 export default function AdminDashboardPage() {
-  const { statistics, isLoading, error, refetch }: any = useAdminStatistics();
+  const { statistics, isLoading, error, refetch } = useAdminStatistics();
 
   if (error) {
     return (
@@ -61,7 +61,7 @@ export default function AdminDashboardPage() {
                 Pending Verifications
               </h3>
               <div className="space-y-4">
-                {["doctor", "shop_owner"].map((type) => (
+                {(["doctor", "shop_owner"] as const).map((type) => (
                   <div key={type} className="flex items-center justify-between">
                     <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
                       {type === "doctor" ? "Doctors" : "Shop Owners"}

@@ -42,7 +42,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           case "doctor":
             router.push(PROTECTED_ROUTES.BROADCASTS_INBOX);
             break;
-          case "shop_keeper":
+          case "medicine_supplier":
           case "patient":
             router.push(PROTECTED_ROUTES.PRESCRIPTIONS_INBOX);
             break;

@@ -15,6 +15,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useUpdateProfile } from '@/hooks/useUpdateProfile';
 import { useChangePassword } from '@/hooks/useChangePassword';
 import { getCurrentUser } from '@/services/api/auth.service';
+import type { User } from '@/types/user.types';
 
 import Input from '@/components/form/input/InputField';
 import Label from '@/components/form/Label';
@@ -64,10 +65,11 @@ export default function ProfilePage() {
       try {
         const currentUser = await getCurrentUser();
         if (currentUser) {
+          const userWithExtras = currentUser as User & { first_name?: string; last_name?: string };
           setProfileData({
             name: currentUser.name || '',
-            first_name: (currentUser as any).first_name || '',
-            last_name: (currentUser as any).last_name || '',
+            first_name: userWithExtras.first_name || '',
+            last_name: userWithExtras.last_name || '',
           });
         }
       } catch (err) {
@@ -76,10 +78,11 @@ export default function ProfilePage() {
     };
 
     if (user) {
+      const userWithExtras = user as User & { first_name?: string; last_name?: string };
       setProfileData({
         name: user.name || '',
-        first_name: (user as any).first_name || '',
-        last_name: (user as any).last_name || '',
+        first_name: userWithExtras.first_name || '',
+        last_name: userWithExtras.last_name || '',
       });
     } else {
       loadUser();

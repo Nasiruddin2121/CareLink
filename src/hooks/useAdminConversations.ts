@@ -74,6 +74,7 @@ export const useAdminConversations = (
    */
   useEffect(() => {
     fetchConversations(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   /**

@@ -9,7 +9,6 @@
 
 import { useState, useCallback } from 'react';
 import { updateMessageStatus } from '@/services/message.service';
-import type { MessageStatus } from '@/config/constants';
 
 /**
  * Use Message Return Type

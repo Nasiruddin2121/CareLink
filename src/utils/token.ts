@@ -68,9 +68,6 @@ export const setAccessToken = (
     const expires = new Date();
     expires.setTime(expires.getTime() + 60 * 60 * 1000); // 1 hour (matching token expiry)
     
-    // Get domain (optional - for production with subdomains)
-    const domain = typeof window !== 'undefined' ? window.location.hostname : '';
-    
     // Build cookie string
     // Note: In production, you may want to add Secure flag (requires HTTPS)
     const isProduction = process.env.NODE_ENV === 'production';
@@ -154,7 +151,7 @@ export const createAuthHeader = (token: string): string => {
  * @param token JWT token
  * @returns Decoded token payload or null if invalid
  */
-export const decodeToken = (token: string): any | null => {
+export const decodeToken = (token: string): Record<string, unknown> | null => {
   try {
     const parts = token.split('.');
     if (parts.length !== 3) {
@@ -164,7 +161,7 @@ export const decodeToken = (token: string): any | null => {
     const payload = parts[1];
     const decoded = atob(payload.replace(/-/g, '+').replace(/_/g, '/'));
     return JSON.parse(decoded);
-  } catch (error) {
+  } catch {
     return null;
   }
 };

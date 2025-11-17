@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { PieChartIcon, UserIcon, ChatIcon, DocsIcon, MailIcon } from "@/icons/index";
+import { PieChartIcon, UserIcon, DocsIcon } from "@/icons/index";
 import type { Statistics } from "@/types/admin.types";
 
 interface StatisticsCardsProps {

@@ -15,7 +15,6 @@ import {
   createBroadcast,
 } from '@/services/broadcast.service';
 import { useSocket } from '@/hooks/useSocket';
-import { WS_EVENTS } from '@/config/constants';
 import type { BroadcastListItem, CreateBroadcastRequest } from '@/types/broadcast.types';
 import type { NewBroadcastEvent, BroadcastAssistedEvent } from '@/types/socket.types';
 import type { UserType } from '@/config/constants';
@@ -101,7 +100,7 @@ export const useBroadcasts = (
   /**
    * Setup WebSocket listeners for broadcasts
    */
-  const { socket, isConnected } = useSocket(userType, userId, {
+  useSocket(userType, userId, {
     onNewBroadcast: handleNewBroadcast,
     onBroadcastAssisted: handleBroadcastAssisted,
   });

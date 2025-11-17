@@ -21,7 +21,7 @@ const UserFilters: React.FC<UserFiltersProps> = ({
   onTypeChange,
   onApprovedStatusChange,
 }) => {
-  const userTypes: UserType[] = ["patient", "doctor", "shop_keeper", "admin"];
+  const userTypes: UserType[] = ["patient", "doctor", "medicine_supplier", "admin"];
 
   return (
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">

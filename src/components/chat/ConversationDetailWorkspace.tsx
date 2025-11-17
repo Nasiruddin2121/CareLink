@@ -64,7 +64,7 @@ export default function ConversationDetailWorkspace({
       const roleMap: Record<string, string> = {
         patient: "Patient",
         doctor: "Doctor",
-        shop_keeper: "Shop Owner",
+        medicine_supplier: "Shop Owner",
         shop_owner: "Shop Owner",
         admin: "Admin",
       };

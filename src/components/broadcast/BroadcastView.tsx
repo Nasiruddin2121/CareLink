@@ -56,7 +56,6 @@ export default function BroadcastView({
     patient,
     created_at,
     updated_at,
-    assisted_by,
     conversation_id,
   } = broadcast;
 

@@ -3,7 +3,6 @@
 import React from "react";
 import Image from "next/image";
 import { formatDistanceToNow } from "date-fns";
-import { getUserTypeLabel } from "@/utils/user.utils";
 import type { AdminBroadcast } from "@/types/admin.types";
 import { MailIcon } from "@/icons/index";
 

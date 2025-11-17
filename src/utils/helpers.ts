@@ -11,7 +11,7 @@
  * @param wait Wait time in milliseconds
  * @returns Debounced function
  */
-export const debounce = <T extends (...args: any[]) => any>(
+export const debounce = <T extends (...args: unknown[]) => unknown>(
   func: T,
   wait: number
 ): ((...args: Parameters<T>) => void) => {
@@ -35,7 +35,7 @@ export const debounce = <T extends (...args: any[]) => any>(
  * @param wait Wait time in milliseconds
  * @returns Throttled function
  */
-export const throttle = <T extends (...args: any[]) => any>(
+export const throttle = <T extends (...args: unknown[]) => unknown>(
   func: T,
   wait: number
 ): ((...args: Parameters<T>) => void) => {
@@ -57,7 +57,7 @@ export const throttle = <T extends (...args: any[]) => any>(
  * @param value Value to check
  * @returns True if empty, false otherwise
  */
-export const isEmpty = (value: any): boolean => {
+export const isEmpty = (value: unknown): boolean => {
   if (value === null || value === undefined) {
     return true;
   }
@@ -83,7 +83,7 @@ export const isEmpty = (value: any): boolean => {
  * @param value Value to check
  * @returns True if not empty, false otherwise
  */
-export const isNotEmpty = (value: any): boolean => {
+export const isNotEmpty = (value: unknown): boolean => {
   return !isEmpty(value);
 };
 
@@ -173,7 +173,7 @@ export const deepClone = <T>(obj: T): T => {
  * @param source Source object
  * @returns Merged object
  */
-export const merge = <T extends Record<string, any>>(
+export const merge = <T extends Record<string, unknown>>(
   target: T,
   source: Partial<T>
 ): T => {
@@ -188,23 +188,27 @@ export const merge = <T extends Record<string, any>>(
  * @param defaultValue Default value if not found
  * @returns Value or default value
  */
-export const getNestedValue = (
-  obj: any,
+export const getNestedValue = <T = unknown>(
+  obj: unknown,
   path: string,
-  defaultValue: any = undefined
-): any => {
+  defaultValue: T | undefined = undefined
+): T | undefined => {
   const keys = path.split('.');
-  let value = obj;
+  let value: unknown = obj;
   
   for (const key of keys) {
     if (value === null || value === undefined) {
       return defaultValue;
     }
     
-    value = value[key];
+    if (typeof value === 'object' && key in value) {
+      value = (value as Record<string, unknown>)[key];
+    } else {
+      return defaultValue;
+    }
   }
   
-  return value ?? defaultValue;
+  return (value as T) ?? defaultValue;
 };
 
 /**
@@ -215,27 +219,27 @@ export const getNestedValue = (
  * @param value Value to set
  * @returns Updated object
  */
-export const setNestedValue = (
-  obj: any,
+export const setNestedValue = <T extends Record<string, unknown>>(
+  obj: T,
   path: string,
-  value: any
-): any => {
+  value: unknown
+): T => {
   const keys = path.split('.');
   const result = { ...obj };
-  let current = result;
+  let current: Record<string, unknown> = result;
   
   for (let i = 0; i < keys.length - 1; i++) {
     const key = keys[i];
-    if (!current[key] || typeof current[key] !== 'object') {
+    if (!current[key] || typeof current[key] !== 'object' || current[key] === null) {
       current[key] = {};
     } else {
-      current[key] = { ...current[key] };
+      current[key] = { ...(current[key] as Record<string, unknown>) };
     }
-    current = current[key];
+    current = current[key] as Record<string, unknown>;
   }
   
   current[keys[keys.length - 1]] = value;
-  return result;
+  return result as T;
 };
 
 /**
@@ -245,12 +249,16 @@ export const setNestedValue = (
  * @param path Path to property (e.g., 'user.name')
  * @returns True if property exists, false otherwise
  */
-export const hasProperty = (obj: any, path: string): boolean => {
+export const hasProperty = (obj: unknown, path: string): boolean => {
   const keys = path.split('.');
-  let current = obj;
+  let current: unknown = obj;
   
   for (const key of keys) {
     if (current === null || current === undefined) {
+      return false;
+    }
+    
+    if (typeof current !== 'object') {
       return false;
     }
     
@@ -258,7 +266,7 @@ export const hasProperty = (obj: any, path: string): boolean => {
       return false;
     }
     
-    current = current[key];
+    current = (current as Record<string, unknown>)[key];
   }
   
   return true;

@@ -5,8 +5,7 @@
  */
 
 import { UserType } from '@/config/constants';
-import { User } from './user.types';
-import { Conversation, ConversationListItem } from './conversation.types';
+import { ConversationListItem } from './conversation.types';
 import { Message } from './message.types';
 import { Broadcast } from './broadcast.types';
 
@@ -160,9 +159,7 @@ export interface ConversationListParams {
 /**
  * Admin Conversation
  */
-export interface AdminConversation extends ConversationListItem {
-  // Additional admin-specific fields if needed
-}
+export type AdminConversation = ConversationListItem;
 
 /**
  * Conversation List Response
@@ -215,9 +212,7 @@ export interface BroadcastListParams {
  * Admin Broadcast
  * Note: Broadcast already includes patient field, so we can use it directly
  */
-export interface AdminBroadcast extends Broadcast {
-  // Additional admin-specific fields if needed
-}
+export type AdminBroadcast = Broadcast;
 
 /**
  * Admin Broadcast List Response

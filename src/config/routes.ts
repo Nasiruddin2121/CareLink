@@ -174,7 +174,7 @@ export const RouteHelpers = {
         return PROTECTED_ROUTES.ADMIN_DASHBOARD;
       case 'doctor':
         return PROTECTED_ROUTES.BROADCASTS_INBOX;
-      case 'shop_keeper':
+      case 'medicine_supplier':
       case 'shop_owner': // Handle both backend values
         return PROTECTED_ROUTES.PRESCRIPTIONS_INBOX;
       case 'patient':

@@ -9,7 +9,7 @@ import { HTTP_STATUS } from '@/config/constants';
 /**
  * Standard API Response
  */
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
   success: boolean;
   data?: T;
   message?: string;
@@ -29,7 +29,7 @@ export interface ErrorResponse {
   statusCode?: number;
   error?: string;
   errors?: Record<string, string[]>;
-  data?: any; // For 409 Conflict with existing resource
+  data?: unknown; // For 409 Conflict with existing resource
 }
 
 /**

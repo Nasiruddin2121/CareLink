@@ -40,7 +40,7 @@ const AppSidebar: React.FC = () => {
     }
 
     // Add Prescriptions button for shop owners
-    const isShopOwner = user?.type === "shop_keeper" || (user?.type as string) === "shop_owner";
+    const isShopOwner = user?.type === "medicine_supplier" || (user?.type as string) === "shop_owner";
     if (isShopOwner) {
       workspaceItems.push({
         name: "Prescriptions",

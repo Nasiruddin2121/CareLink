@@ -93,7 +93,7 @@ export const usePrescription = (userType?: UserType | string): UsePrescriptionRe
         // Fallback to shop owner endpoint for backward compatibility
         // This is only needed if the unified endpoint fails for shop owners
         // In most cases, this should not be needed, but kept for safety
-        const isShopOwner = userType === 'shop_keeper' || (userType as string) === 'shop_owner';
+        const isShopOwner = userType === 'medicine_supplier' || (userType as string) === 'shop_owner';
         
         if (isShopOwner) {
           try {
@@ -109,7 +109,7 @@ export const usePrescription = (userType?: UserType | string): UsePrescriptionRe
               sender_id: shopOwnerPrescription.sender_id,
               receiver_id: shopOwnerPrescription.receiver_id,
               conversation_id: shopOwnerPrescription.conversation_id,
-              status: shopOwnerPrescription.status as any, // MessageStatus type
+              status: shopOwnerPrescription.status as 'PENDING' | 'SENT' | 'DELIVERED' | 'READ',
               attachment: null,
               attachment_url: null,
               created_at: shopOwnerPrescription.created_at,
@@ -118,7 +118,7 @@ export const usePrescription = (userType?: UserType | string): UsePrescriptionRe
               receiver: shopOwnerPrescription.receiver || shopOwnerPrescription.sender, // Fallback to sender if receiver not available
             };
             setPrescription(prescriptionData);
-          } catch (shopOwnerError) {
+          } catch {
             // If both endpoints fail, throw the original error
             throw unifiedError;
           }

@@ -44,7 +44,7 @@ const mapConversationListItem = (
 
   // Get role label based on user type
   // Note: Backend now guarantees type field is present in creator/participant objects
-  // Backend returns "shop_owner" (not "shop_keeper"), but we handle both for compatibility
+  // Backend returns "shop_owner" (not "medicine_supplier"), but we handle both for compatibility
   const getRoleLabel = (userType: string | undefined): string => {
     if (!userType) {
       return "User"; // Fallback (should not occur now, but kept for safety)
@@ -56,7 +56,7 @@ const mapConversationListItem = (
       case "doctor":
         return "Doctor";
       case "shop_owner": // Backend returns "shop_owner"
-      case "shop_keeper": // Fallback for legacy data
+      case "medicine_supplier": // Fallback for legacy data
         return "Shop Owner";
       case "admin":
         return "Admin";
